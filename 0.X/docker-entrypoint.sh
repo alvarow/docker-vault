@@ -1,4 +1,4 @@
-#!/bin/dumb-init /bin/sh
+#!/bin/sh
 set -e
 
 # Note above that we run dumb-init as PID 1 in order to reap zombie processes
@@ -94,4 +94,9 @@ if [ "$1" = 'vault' ]; then
     set -- gosu vault "$@"
 fi
 
+# Pass a script in the container that will start vault in background, wait for it to start then run a pre-defined set of vault
+# write commands to populate the vault in DEV mode
+set -- /vault/init-local.sh "$@"
+echo "Running: $@"
 exec "$@"
+
